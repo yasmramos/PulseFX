@@ -11,4 +11,4 @@
  * 
  * @since 0.1.0
  */
-package com.pulsefx.core.validation;
+package dev.yasmramos.pulsefx.core.validation;

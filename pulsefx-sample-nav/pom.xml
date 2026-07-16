@@ -10,39 +10,24 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>pulsefx-data</artifactId>
+    <artifactId>pulsefx-sample-nav</artifactId>
     <packaging>jar</packaging>
 
-    <name>PulseFX Data</name>
-    <description>PulseFX Data - Async Data Layer (Future)</description>
+    <name>PulseFX Sample Navigation</name>
+    <description>Sample application demonstrating PulseFX Navigation</description>
 
     <dependencies>
-        <!-- JavaFX -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-        </dependency>
-
-        <!-- Internal dependencies -->
         <dependency>
             <groupId>dev.yasmramos.pulsefx</groupId>
             <artifactId>pulsefx-core</artifactId>
         </dependency>
-
-        <!-- Testing -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
+            <groupId>dev.yasmramos.pulsefx</groupId>
+            <artifactId>pulsefx-navigation</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
         </dependency>
     </dependencies>
 
@@ -53,8 +38,12 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>dev.yasmramos.pulsefx.sample.SampleNavigationApp</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

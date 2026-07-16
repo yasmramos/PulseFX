@@ -11,11 +11,11 @@
  * 
  * @since 0.1.0
  */
-module com.pulsefx.core {
+module dev.yasmramos.pulsefx.core {
     requires javafx.base;
     requires javafx.controls;
     
-    exports com.pulsefx.core.validation;
-    exports com.pulsefx.core.form;
-    exports com.pulsefx.core.rules;
+    exports dev.yasmramos.pulsefx.core.validation;
+    exports dev.yasmramos.pulsefx.core.form;
+    exports dev.yasmramos.pulsefx.core.rules;
 }

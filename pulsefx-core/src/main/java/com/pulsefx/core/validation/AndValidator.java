@@ -1,4 +1,4 @@
-package com.pulsefx.core.validation;
+package dev.yasmramos.pulsefx.core.validation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,45 +30,45 @@ final class AndValidator<T> implements Validator<T> {
     }
     
     @Override
-    public ValidationResult validate(T value) {
-        ValidationResult firstResult = first.validate(value);
-        ValidationResult secondResult = second.validate(value);
+    public ValidationResult<T> validate(T value) {
+        ValidationResult<T> firstResult = first.validate(value);
+        ValidationResult<T> secondResult = second.validate(value);
         
         if (firstResult.isValid() && secondResult.isValid()) {
-            return ValidationResult.Valid.INSTANCE;
+            return ValidationResult.valid(null);
         }
         
         List<String> allReasons = new ArrayList<>();
-        if (firstResult instanceof ValidationResult.Invalid invalid) {
+        if (firstResult instanceof ValidationResult.Invalid<?> invalid) {
             invalid.errors().forEach(allReasons::add);
         }
-        if (secondResult instanceof ValidationResult.Invalid invalid) {
+        if (secondResult instanceof ValidationResult.Invalid<?> invalid) {
             invalid.errors().forEach(allReasons::add);
         }
         
-        return new ValidationResult.Invalid(allReasons);
+        return new ValidationResult.Invalid<>(allReasons);
     }
     
     @Override
-    public CompletableFuture<ValidationResult> validateAsync(T value) {
+    public CompletableFuture<ValidationResult<T>> validateAsync(T value) {
         return first.validateAsync(value)
                 .thenCompose(firstResult -> {
                     if (!firstResult.isValid()) {
                         // First failed, but we still need to check second for complete error reporting
                         return second.validateAsync(value).thenApply(secondResult -> {
                             List<String> allReasons = new ArrayList<>();
-                            if (firstResult instanceof ValidationResult.Invalid invalid) {
+                            if (firstResult instanceof ValidationResult.Invalid<?> invalid) {
                                 invalid.errors().forEach(allReasons::add);
                             }
-                            if (secondResult instanceof ValidationResult.Invalid invalid) {
+                            if (secondResult instanceof ValidationResult.Invalid<?> invalid) {
                                 invalid.errors().forEach(allReasons::add);
                             }
-                            return new ValidationResult.Invalid(allReasons);
+                            return new ValidationResult.Invalid<>(allReasons);
                         });
                     }
                     return second.validateAsync(value).thenApply(secondResult -> {
                         if (secondResult.isValid()) {
-                            return ValidationResult.Valid.INSTANCE;
+                            return ValidationResult.valid(null);
                         }
                         return secondResult;
                     });

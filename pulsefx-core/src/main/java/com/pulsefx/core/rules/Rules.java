@@ -1,7 +1,7 @@
-package com.pulsefx.core.rules;
+package dev.yasmramos.pulsefx.core.rules;
 
-import com.pulsefx.core.validation.ValidationResult;
-import com.pulsefx.core.validation.Validator;
+import dev.yasmramos.pulsefx.core.validation.ValidationResult;
+import dev.yasmramos.pulsefx.core.validation.Validator;
 
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -29,9 +29,9 @@ public final class Rules {
     public static <T> Validator<T> nonNull() {
         return value -> {
             if (value == null) {
-                return new ValidationResult.Invalid(java.util.List.of("Value must not be null"));
+                return new ValidationResult.Invalid<>(java.util.List.of("Value must not be null"));
             }
-            return ValidationResult.Valid.INSTANCE;
+            return ValidationResult.valid(value);
         };
     }
     
@@ -44,9 +44,9 @@ public final class Rules {
     public static <T> Validator<T> isNull() {
         return value -> {
             if (value != null) {
-                return new ValidationResult.Invalid(java.util.List.of("Value must be null"));
+                return new ValidationResult.Invalid<>(java.util.List.of("Value must be null"));
             }
-            return ValidationResult.Valid.INSTANCE;
+            return ValidationResult.valid(null);
         };
     }
     
@@ -60,9 +60,9 @@ public final class Rules {
     public static Validator<String> nonEmpty() {
         return value -> {
             if (value == null || value.trim().isEmpty()) {
-                return new ValidationResult.Invalid(java.util.List.of("Value must not be empty"));
+                return new ValidationResult.Invalid<>(java.util.List.of("Value must not be empty"));
             }
-            return ValidationResult.Valid.INSTANCE;
+            return ValidationResult.valid(value);
         };
     }
     
@@ -79,13 +79,13 @@ public final class Rules {
         }
         return value -> {
             if (value == null) {
-                return ValidationResult.Valid.INSTANCE;
+                return ValidationResult.valid(null);
             }
             if (value.length() < minLength) {
-                return new ValidationResult.Invalid(
+                return new ValidationResult.Invalid<>(
                     java.util.List.of("Value must be at least " + minLength + " characters long"));
             }
-            return ValidationResult.Valid.INSTANCE;
+            return ValidationResult.valid(value);
         };
     }
     
@@ -102,13 +102,13 @@ public final class Rules {
         }
         return value -> {
             if (value == null) {
-                return ValidationResult.Valid.INSTANCE;
+                return ValidationResult.valid(null);
             }
             if (value.length() > maxLength) {
-                return new ValidationResult.Invalid(
+                return new ValidationResult.Invalid<>(
                     java.util.List.of("Value must be at most " + maxLength + " characters long"));
             }
-            return ValidationResult.Valid.INSTANCE;
+            return ValidationResult.valid(value);
         };
     }
     
@@ -127,12 +127,12 @@ public final class Rules {
         );
         return value -> {
             if (value == null || value.trim().isEmpty()) {
-                return ValidationResult.Valid.INSTANCE;
+                return ValidationResult.valid(null);
             }
             if (!emailPattern.matcher(value).matches()) {
-                return new ValidationResult.Invalid(java.util.List.of("Value must be a valid email address"));
+                return new ValidationResult.Invalid<>(java.util.List.of("Value must be a valid email address"));
             }
-            return ValidationResult.Valid.INSTANCE;
+            return ValidationResult.valid(value);
         };
     }
     
@@ -150,9 +150,9 @@ public final class Rules {
         Objects.requireNonNull(errorMessage, "errorMessage must not be null");
         return value -> {
             if (predicate.test(value)) {
-                return ValidationResult.Valid.INSTANCE;
+                return ValidationResult.valid(value);
             }
-            return new ValidationResult.Invalid(java.util.List.of(errorMessage));
+            return new ValidationResult.Invalid<>(java.util.List.of(errorMessage));
         };
     }
     
@@ -163,7 +163,7 @@ public final class Rules {
      * @return a validator that always returns Valid
      */
     public static <T> Validator<T> alwaysValid() {
-        return value -> ValidationResult.Valid.INSTANCE;
+        return value -> ValidationResult.valid(value);
     }
     
     /**
@@ -174,6 +174,6 @@ public final class Rules {
      * @return a validator that always returns Invalid
      */
     public static <T> Validator<T> alwaysInvalid(String reason) {
-        return value -> new ValidationResult.Invalid(java.util.List.of(reason));
+        return value -> new ValidationResult.Invalid<>(java.util.List.of(reason));
     }
 }
