@@ -23,7 +23,7 @@ class FormStateTest {
         @DisplayName("should create form with single field")
         void createsFormWithSingleField() {
             StringProperty prop = new SimpleStringProperty("");
-            Validator<String> validator = value -> ValidationResult.Valid.INSTANCE;
+            Validator<String> validator = value -> ValidationResult.valid(null);
 
             FormState form = FormState.builder()
                     .field("email", prop, validator)
@@ -37,7 +37,7 @@ class FormStateTest {
         void createsFormWithMultipleFields() {
             StringProperty emailProp = new SimpleStringProperty("");
             StringProperty passwordProp = new SimpleStringProperty("");
-            Validator<String> validator = value -> ValidationResult.Valid.INSTANCE;
+            Validator<String> validator = value -> ValidationResult.valid(null);
 
             FormState form = FormState.builder()
                     .field("email", emailProp, validator)
@@ -51,7 +51,7 @@ class FormStateTest {
         @DisplayName("should throw when fieldName is null")
         void throwsWhenFieldNameNull() {
             StringProperty prop = new SimpleStringProperty("");
-            Validator<String> validator = value -> ValidationResult.Valid.INSTANCE;
+            Validator<String> validator = value -> ValidationResult.valid(null);
 
             assertThatThrownBy(() -> FormState.builder()
                     .field(null, prop, validator))
@@ -62,7 +62,7 @@ class FormStateTest {
         @Test
         @DisplayName("should throw when valueProperty is null")
         void throwsWhenValuePropertyNull() {
-            Validator<String> validator = value -> ValidationResult.Valid.INSTANCE;
+            Validator<String> validator = value -> ValidationResult.valid(null);
 
             assertThatThrownBy(() -> FormState.builder()
                     .field("email", null, validator))
@@ -92,8 +92,8 @@ class FormStateTest {
             StringProperty emailProp = new SimpleStringProperty("test@example.com");
             Validator<String> emailValidator = value -> 
                 (value != null && value.contains("@")) 
-                    ? ValidationResult.Valid.INSTANCE 
-                    : new ValidationResult.Invalid(List.of("Invalid email"));
+                    ? ValidationResult.valid(null) 
+                    : new ValidationResult.Invalid<>(List.of("Invalid email"));
 
             FormState form = FormState.builder()
                     .field("email", emailProp, emailValidator)
@@ -108,8 +108,8 @@ class FormStateTest {
             StringProperty emailProp = new SimpleStringProperty("invalid");
             Validator<String> emailValidator = value -> 
                 (value != null && value.contains("@")) 
-                    ? ValidationResult.Valid.INSTANCE 
-                    : new ValidationResult.Invalid(List.of("Invalid email"));
+                    ? ValidationResult.valid(null) 
+                    : new ValidationResult.Invalid<>(List.of("Invalid email"));
 
             FormState form = FormState.builder()
                     .field("email", emailProp, emailValidator)
@@ -124,8 +124,8 @@ class FormStateTest {
             StringProperty emailProp = new SimpleStringProperty("invalid");
             Validator<String> emailValidator = value -> 
                 (value != null && value.contains("@")) 
-                    ? ValidationResult.Valid.INSTANCE 
-                    : new ValidationResult.Invalid(List.of("Invalid email"));
+                    ? ValidationResult.valid(null) 
+                    : new ValidationResult.Invalid<>(List.of("Invalid email"));
 
             FormState form = FormState.builder()
                     .field("email", emailProp, emailValidator)
@@ -143,7 +143,7 @@ class FormStateTest {
         void tracksErrorsForInvalidFields() {
             StringProperty emailProp = new SimpleStringProperty("invalid");
             Validator<String> emailValidator = value -> 
-                new ValidationResult.Invalid(List.of("Must contain @"));
+                new ValidationResult.Invalid<>(List.of("Must contain @"));
 
             FormState form = FormState.builder()
                     .field("email", emailProp, emailValidator)
@@ -157,7 +157,7 @@ class FormStateTest {
         void checksFieldSpecificErrors() {
             StringProperty emailProp = new SimpleStringProperty("invalid");
             Validator<String> emailValidator = value -> 
-                new ValidationResult.Invalid(List.of("Must contain @"));
+                new ValidationResult.Invalid<>(List.of("Must contain @"));
 
             FormState form = FormState.builder()
                     .field("email", emailProp, emailValidator)
@@ -170,7 +170,7 @@ class FormStateTest {
         @DisplayName("should return empty list for non-existent field errors")
         void returnsEmptyListForNonExistentField() {
             StringProperty emailProp = new SimpleStringProperty("test@example.com");
-            Validator<String> emailValidator = value -> ValidationResult.Valid.INSTANCE;
+            Validator<String> emailValidator = value -> ValidationResult.valid(null);
 
             FormState form = FormState.builder()
                     .field("email", emailProp, emailValidator)
@@ -188,7 +188,7 @@ class FormStateTest {
         @DisplayName("should not be dirty initially")
         void notDirtyInitially() {
             StringProperty emailProp = new SimpleStringProperty("initial@example.com");
-            Validator<String> validator = value -> ValidationResult.Valid.INSTANCE;
+            Validator<String> validator = value -> ValidationResult.valid(null);
 
             FormState form = FormState.builder()
                     .field("email", emailProp, validator)
@@ -201,7 +201,7 @@ class FormStateTest {
         @DisplayName("should be dirty when field value changes")
         void dirtyWhenValueChanges() {
             StringProperty emailProp = new SimpleStringProperty("initial@example.com");
-            Validator<String> validator = value -> ValidationResult.Valid.INSTANCE;
+            Validator<String> validator = value -> ValidationResult.valid(null);
 
             FormState form = FormState.builder()
                     .field("email", emailProp, validator)
@@ -216,7 +216,7 @@ class FormStateTest {
         @DisplayName("should not be dirty after markAsClean")
         void notDirtyAfterMarkAsClean() {
             StringProperty emailProp = new SimpleStringProperty("initial@example.com");
-            Validator<String> validator = value -> ValidationResult.Valid.INSTANCE;
+            Validator<String> validator = value -> ValidationResult.valid(null);
 
             FormState form = FormState.builder()
                     .field("email", emailProp, validator)
@@ -234,7 +234,7 @@ class FormStateTest {
         @DisplayName("should be clean after reset")
         void cleanAfterReset() {
             StringProperty emailProp = new SimpleStringProperty("initial@example.com");
-            Validator<String> validator = value -> ValidationResult.Valid.INSTANCE;
+            Validator<String> validator = value -> ValidationResult.valid(null);
 
             FormState form = FormState.builder()
                     .field("email", emailProp, validator)
@@ -259,8 +259,8 @@ class FormStateTest {
             StringProperty emailProp = new SimpleStringProperty("test@example.com");
             Validator<String> validator = value -> 
                 (value != null && value.contains("@")) 
-                    ? ValidationResult.Valid.INSTANCE 
-                    : new ValidationResult.Invalid(List.of("Invalid email"));
+                    ? ValidationResult.valid(null) 
+                    : new ValidationResult.Invalid<>(List.of("Invalid email"));
 
             FormState form = FormState.builder()
                     .field("email", emailProp, validator)
@@ -277,7 +277,7 @@ class FormStateTest {
         @DisplayName("should provide dirty property for binding")
         void providesDirtyProperty() {
             StringProperty emailProp = new SimpleStringProperty("initial@example.com");
-            Validator<String> validator = value -> ValidationResult.Valid.INSTANCE;
+            Validator<String> validator = value -> ValidationResult.valid(null);
 
             FormState form = FormState.builder()
                     .field("email", emailProp, validator)
@@ -295,7 +295,7 @@ class FormStateTest {
         void providesErrorsProperty() {
             StringProperty emailProp = new SimpleStringProperty("invalid");
             Validator<String> validator = value -> 
-                new ValidationResult.Invalid(List.of("Must contain @"));
+                new ValidationResult.Invalid<>(List.of("Must contain @"));
 
             FormState form = FormState.builder()
                     .field("email", emailProp, validator)
@@ -315,8 +315,8 @@ class FormStateTest {
             StringProperty emailProp = new SimpleStringProperty("test@example.com");
             Validator<String> validator = value -> 
                 (value != null && value.contains("@")) 
-                    ? ValidationResult.Valid.INSTANCE 
-                    : new ValidationResult.Invalid(List.of("Invalid email"));
+                    ? ValidationResult.valid(null) 
+                    : new ValidationResult.Invalid<>(List.of("Invalid email"));
 
             FormState form = FormState.builder()
                     .field("email", emailProp, validator)
@@ -334,8 +334,8 @@ class FormStateTest {
             StringProperty emailProp = new SimpleStringProperty("invalid");
             Validator<String> validator = value -> 
                 (value != null && value.contains("@")) 
-                    ? ValidationResult.Valid.INSTANCE 
-                    : new ValidationResult.Invalid(List.of("Invalid email"));
+                    ? ValidationResult.valid(null) 
+                    : new ValidationResult.Invalid<>(List.of("Invalid email"));
 
             FormState form = FormState.builder()
                     .field("email", emailProp, validator)

@@ -1,4 +1,4 @@
-package com.pulsefx.core.validation;
+package dev.yasmramos.pulsefx.core.validation;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -27,7 +27,7 @@ public interface Validator<T> {
      * @param value the value to validate, may be null
      * @return the validation result
      */
-    ValidationResult validate(T value);
+    ValidationResult<T> validate(T value);
     
     /**
      * Validates the given value asynchronously.
@@ -38,7 +38,7 @@ public interface Validator<T> {
      * @param value the value to validate, may be null
      * @return a CompletableFuture that will complete with the validation result
      */
-    default CompletableFuture<ValidationResult> validateAsync(T value) {
+    default CompletableFuture<ValidationResult<T>> validateAsync(T value) {
         return CompletableFuture.completedFuture(validate(value));
     }
     
@@ -75,11 +75,12 @@ public interface Validator<T> {
      */
     default Validator<T> negate() {
         return value -> {
-            ValidationResult result = validate(value);
-            return switch (result) {
-                case ValidationResult.Valid ignored -> new ValidationResult.Invalid(List.of("Value should not satisfy the condition"));
-                case ValidationResult.Invalid ignored -> ValidationResult.Valid.INSTANCE;
-            };
+            ValidationResult<T> result = validate(value);
+            if (result.isValid()) {
+                return new ValidationResult.Invalid<>(List.of("Value should not satisfy the condition"));
+            } else {
+                return ValidationResult.valid(null);
+            }
         };
     }
 }
