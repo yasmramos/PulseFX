@@ -12,4 +12,4 @@
  * 
  * @since 0.1.0
  */
-package com.pulsefx.core.rules;
+package dev.yasmramos.pulsefx.core.rules;

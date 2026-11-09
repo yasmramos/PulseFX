@@ -19,9 +19,9 @@ class ValidatorTest {
 
         private final Validator<String> nonEmptyValidator = value -> {
             if (value == null || value.trim().isEmpty()) {
-                return new ValidationResult.Invalid(List.of("Value must not be empty"));
+                return new ValidationResult.Invalid<>(List.of("Value must not be empty"));
             }
-            return ValidationResult.Valid.INSTANCE;
+            return ValidationResult.valid(value);
         };
 
         @Test
@@ -58,26 +58,26 @@ class ValidatorTest {
                 Thread.currentThread().interrupt();
             }
             if (value == null || value.isEmpty()) {
-                return new ValidationResult.Invalid(List.of("Async validation failed"));
+                return new ValidationResult.Invalid<>(List.of("Async validation failed"));
             }
-            return ValidationResult.Valid.INSTANCE;
+            return ValidationResult.valid(value);
         };
 
         @Test
         @DisplayName("should complete future with validation result")
         void completesFutureWithResult() throws ExecutionException, InterruptedException {
-            CompletableFuture<ValidationResult> future = asyncValidator.validateAsync("test");
+            CompletableFuture<ValidationResult<String>> future = asyncValidator.validateAsync("test");
             assertThat(future).isCompleted();
-            ValidationResult result = future.get();
+            ValidationResult<String> result = future.get();
             assertThat(result.isValid()).isTrue();
         }
 
         @Test
         @DisplayName("should complete future with invalid result on failure")
         void completesFutureWithInvalidResult() throws ExecutionException, InterruptedException {
-            CompletableFuture<ValidationResult> future = asyncValidator.validateAsync("");
+            CompletableFuture<ValidationResult<String>> future = asyncValidator.validateAsync("");
             assertThat(future).isCompleted();
-            ValidationResult result = future.get();
+            ValidationResult<String> result = future.get();
             assertThat(result.isValid()).isFalse();
         }
     }
@@ -88,13 +88,13 @@ class ValidatorTest {
 
         private final Validator<String> nonEmpty = value -> 
             (value != null && !value.isEmpty()) 
-                ? ValidationResult.Valid.INSTANCE 
-                : new ValidationResult.Invalid(List.of("Must not be empty"));
+                ? ValidationResult.valid(value) 
+                : new ValidationResult.Invalid<>(List.of("Must not be empty"));
 
         private final Validator<String> minLength5 = value -> 
             (value != null && value.length() >= 5) 
-                ? ValidationResult.Valid.INSTANCE 
-                : new ValidationResult.Invalid(List.of("Must be at least 5 characters"));
+                ? ValidationResult.valid(value) 
+                : new ValidationResult.Invalid<>(List.of("Must be at least 5 characters"));
 
         @Test
         @DisplayName("should pass when both validators pass")
@@ -138,13 +138,13 @@ class ValidatorTest {
 
         private final Validator<String> isEmail = value -> 
             (value != null && value.contains("@")) 
-                ? ValidationResult.Valid.INSTANCE 
-                : new ValidationResult.Invalid(List.of("Must be an email"));
+                ? ValidationResult.valid(value) 
+                : new ValidationResult.Invalid<>(List.of("Must be an email"));
 
         private final Validator<String> isPhone = value -> 
             (value != null && value.matches("\\d+")) 
-                ? ValidationResult.Valid.INSTANCE 
-                : new ValidationResult.Invalid(List.of("Must be a phone number"));
+                ? ValidationResult.valid(value) 
+                : new ValidationResult.Invalid<>(List.of("Must be a phone number"));
 
         @Test
         @DisplayName("should pass when first validator passes")
@@ -186,8 +186,8 @@ class ValidatorTest {
 
         private final Validator<Integer> isEven = value -> 
             (value % 2 == 0) 
-                ? ValidationResult.Valid.INSTANCE 
-                : new ValidationResult.Invalid(List.of("Must be even"));
+                ? ValidationResult.valid(value) 
+                : new ValidationResult.Invalid<>(List.of("Must be even"));
 
         @Test
         @DisplayName("should invert valid to invalid")

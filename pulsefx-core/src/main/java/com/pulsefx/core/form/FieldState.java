@@ -1,7 +1,7 @@
-package com.pulsefx.core.form;
+package dev.yasmramos.pulsefx.core.form;
 
-import com.pulsefx.core.validation.ValidationResult;
-import com.pulsefx.core.validation.Validator;
+import dev.yasmramos.pulsefx.core.validation.ValidationResult;
+import dev.yasmramos.pulsefx.core.validation.Validator;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;

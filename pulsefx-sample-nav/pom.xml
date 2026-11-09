@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dev.yasmramos.pulsefx</groupId>
+        <artifactId>pulsefx-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>pulsefx-sample-nav</artifactId>
+    <packaging>jar</packaging>
+
+    <name>PulseFX Sample Navigation</name>
+    <description>Sample application demonstrating PulseFX Navigation</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>dev.yasmramos.pulsefx</groupId>
+            <artifactId>pulsefx-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dev.yasmramos.pulsefx</groupId>
+            <artifactId>pulsefx-navigation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>dev.yasmramos.pulsefx.sample.SampleNavigationApp</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

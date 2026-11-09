@@ -1,6 +1,7 @@
-package com.pulsefx.core.validation;
+package dev.yasmramos.pulsefx.core.validation;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Result of a validation operation.
@@ -10,14 +11,21 @@ import java.util.List;
  * 
  * <pre>{@code
  * switch (result) {
- *     case Valid valid -> System.out.println("Validation passed");
+ *     case Valid valid -> System.out.println("Validation passed: " + valid.value());
  *     case Invalid invalid -> invalid.errors().forEach(System.out::println);
  * }
  * }</pre>
  * 
+ * <p>Factory methods are provided for convenience:</p>
+ * <pre>{@code
+ * ValidationResult<String> valid = ValidationResult.valid("success");
+ * ValidationResult<String> invalid = ValidationResult.invalid("Field required");
+ * }</pre>
+ * 
+ * @param <T> the type of the validated value
  * @since 0.1.0
  */
-public sealed interface ValidationResult permits ValidationResult.Valid, ValidationResult.Invalid {
+public sealed interface ValidationResult<T> permits ValidationResult.Valid, ValidationResult.Invalid {
     
     /**
      * Returns true if this result represents a successful validation.
@@ -25,6 +33,14 @@ public sealed interface ValidationResult permits ValidationResult.Valid, Validat
      * @return true if valid, false otherwise
      */
     boolean isValid();
+    
+    /**
+     * Returns the validated value if this is a successful result, or null otherwise.
+     * 
+     * @return the validated value, or null if invalid
+     * @since 0.1.0
+     */
+    T value();
     
     /**
      * Returns the list of error messages for this validation result.
@@ -37,16 +53,49 @@ public sealed interface ValidationResult permits ValidationResult.Valid, Validat
     List<String> errors();
     
     /**
-     * A successful validation result.
+     * Creates a successful validation result with the given value.
      * 
+     * @param <T> the type of the value
+     * @param value the validated value
+     * @return a Valid instance
      * @since 0.1.0
      */
-    record Valid() implements ValidationResult {
-        
-        /**
-         * The singleton instance for valid results.
-         */
-        public static final Valid INSTANCE = new Valid();
+    static <T> ValidationResult<T> valid(T value) {
+        return new Valid<>(value);
+    }
+    
+    /**
+     * Creates a failed validation result with a single error message.
+     * 
+     * @param <T> the type of the value (inferred as Object typically)
+     * @param error the error message
+     * @return an Invalid instance
+     * @since 0.1.0
+     */
+    static <T> ValidationResult<T> invalid(String error) {
+        return new Invalid<>(List.of(Objects.requireNonNull(error, "error must not be null")));
+    }
+    
+    /**
+     * Creates a failed validation result with multiple error messages.
+     * 
+     * @param <T> the type of the value (inferred as Object typically)
+     * @param errors the list of error messages
+     * @return an Invalid instance
+     * @throws IllegalArgumentException if errors is null or empty
+     * @since 0.1.0
+     */
+    static <T> ValidationResult<T> invalid(List<String> errors) {
+        return new Invalid<>(errors);
+    }
+    
+    /**
+     * A successful validation result containing the validated value.
+     * 
+     * @param <T> the type of the value
+     * @since 0.1.0
+     */
+    record Valid<T>(T value) implements ValidationResult<T> {
         
         @Override
         public boolean isValid() {
@@ -62,10 +111,11 @@ public sealed interface ValidationResult permits ValidationResult.Valid, Validat
     /**
      * A failed validation result with one or more error reasons.
      * 
+     * @param <T> the type of the value (unused but kept for symmetry)
      * @param errors non-empty list of validation failure reasons
      * @since 0.1.0
      */
-    record Invalid(List<String> errors) implements ValidationResult {
+    record Invalid<T>(List<String> errors) implements ValidationResult<T> {
         
         /**
          * Constructs a new Invalid result.
@@ -82,6 +132,11 @@ public sealed interface ValidationResult permits ValidationResult.Valid, Validat
         @Override
         public boolean isValid() {
             return false;
+        }
+        
+        @Override
+        public T value() {
+            return null;
         }
     }
 }
